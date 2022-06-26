@@ -1,25 +1,33 @@
 name: Continuous Integration
-on: [push, pull_request]
+on:
+  # branches, branches-ignore, tags, tags-ignoreが有名
+  # 例: realeases/** '!releases/**-testing'だとreleasesで反応するけど、-testingが除外
+  # paths:もある。paths: '*.js'などの指定
+  - push
+  - pull_request
+
+  # typeによる絞り込み
+  # - issue_comment:
+  #   types: [created, edited] # deletedもあるけどその時は動作させない
+
+# 全てのステップにデフォルトで適用される設定を定義可能, ジョブレベルも可能。
+# shell, working-directoryを指定するっぽい
+# defaults:
+
+# envで指定。ジョブレベル, ステップレベルもOK
+# より限定的なスコープのenvが優先される
+# CI, HOME, GITHUB_ などは取り扱い注意
+env:
+  TEST_ARG: test-arg-value
+
+# 秘密情報
+# GITHUB, secretsに登録する
+# CONSTケースで入れるのが通例
+# secrets.<TOKEN名>
+# 基本的にはforkされたリポジトリに秘密情報は渡されない
+# GITHUB_TOKENはreadのみ渡されるので注意
 
 jobs:
-  unit-test:
-    # ここがブラウザ上で表示される
-    name: Unit Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        # 使用するアクションについて
-        uses: actions/checkout@v3
-      - name: Set Node.js 16.x
-        uses: actions/setup-node@v3
-        # actionsに渡す引数。actions側ではINOUT_<変数名の大文字>で参照される。例: INPUT_NODE-VERSION
-        # entrypoint, argsなどでDockerfileへ渡すこともできる 詳しくはdocket-test.yml
-        with:
-          node-version: 16.x
-      - name: Install dependency
-        run: yarn install --frozen-lockfile
-      - name: Test
-        run: yarn test
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -34,15 +42,59 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Lint
         run: yarn lint
+  unit-test:
+    # ここがブラウザ上で表示される
+    name: Unit Test
+    runs-on: ubuntu-latest
+    # 依存関係
+    # deplog: needs: [lint, test]なら両方成功して初めて実行する
+    needs:
+      - lint
+    steps:
+      - name: Checkout
+        # 使用するアクションについて
+        uses: actions/checkout@v3
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        # actionsに渡す引数。actions側ではINOUT_<変数名の大文字>で参照される。例: INPUT_NODE-VERSION
+        # entrypoint, argsなどでDockerfileへ渡すこともできる 詳しくはdocket-test.yml
+        with:
+          node-version: 16.x
+      - name: Install dependency
+        run: yarn install --frozen-lockfile
+      - name: Test
+        run: yarn test
+        # timeoutを指定, ステップレベル, ジョブレベルで指定可能
+        # デフォルトは360分
+        timeout-minutes: 10
+        # trueにすると落ちてもCIが動くようになる
+        continue-on-error: false
   command-playground:
     name: Command Plaayground
     runs-on: ubuntu-latest
     steps:
       - run: pwd
       - run: pwd
+        # コマンド実行時のディレクトリが指定できる
         working-directory: /tmp
       - run: ls
         working-directory: /tmp
       - run: pwd
       - run: cd /tmp
+      # 別プロセスなのでcdしたとて、次のコマンドでは移動していない
       - run: pwd
+  job1:
+    name: Output Send
+    runs-on: ubuntu-latest
+    outputs:
+      random: ${{ steps.generate-random.outputs.random }}
+    steps:
+      - id: generate-random
+        run: echo "::set-output name=random::$(openssl rand -base64 12)"
+
+  job2:
+    name: Output Receive
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - run: echo "${{ needs.job1.outputs.random }}"
