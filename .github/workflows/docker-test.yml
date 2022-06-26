@@ -1,0 +1,13 @@
+name: Continuous Integration
+on: push
+
+jobs:
+  docker-test:
+    name: Docker Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello World
+        uses: docker://apline:3.11
+        with:
+          entrypoint: /bin/echo
+          args: Hello, World!
