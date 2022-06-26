@@ -31,6 +31,8 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.set-output-test.outputs.result }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -53,8 +55,8 @@ jobs:
         run: echo 'The selected color is' $TZ
       - name: set-output-test
         id: set-output-test
-        run: echo "::set-output name=result::yeah"
-      - name: print
+        run: echo "::set-output name=result::true"
+      - name: print-output-test
         run: echo ${{ steps.set-output-test.outputs.result }}
       - name: Install dependency
         run: yarn install --frozen-lockfile
@@ -88,6 +90,8 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependency
         run: yarn install --frozen-lockfile
+      - name: print-output-from-another-job
+        run: echo ${{ needs.lint.outputs.result }}
       - name: Test
         run: yarn test
         # timeoutを指定, ステップレベル, ジョブレベルで指定可能
