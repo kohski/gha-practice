@@ -121,3 +121,13 @@ jobs:
     steps:
       - name: echo matrix
         run: echo ${{ matrix.gender }}-${{ matrix.grade }}-${{ matrix.ritual }}
+  job-if-master:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Master!!!!"
+  job-if-develop:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Master!!!!"
