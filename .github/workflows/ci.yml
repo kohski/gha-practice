@@ -98,3 +98,14 @@ jobs:
     needs: job1
     steps:
       - run: echo "${{ needs.job1.outputs.random }}"
+
+  matrix-test:
+    name: Matrix Unit Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gender: [female, male, non-binary]
+        grade: [junior, professional]
+    steps:
+      - name: echo matrix
+        run: echo ${{ matrix.gender }}-${{ matrix.grade }}
