@@ -73,6 +73,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: "**/node_modules"
+          # ここに完全一致するkeyがある場合はpathで指定したfile-pathに復元される
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependency
         run: yarn install --frozen-lockfile
@@ -83,6 +84,11 @@ jobs:
         timeout-minutes: 10
         # trueにすると落ちてもCIが動くようになる
         continue-on-error: false
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-coverage
+          path: coverage
   command-playground:
     name: Command Plaayground
     runs-on: ubuntu-latest
