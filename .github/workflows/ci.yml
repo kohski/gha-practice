@@ -131,3 +131,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Master!!!!"
+  job-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ toJson(github) }}"
+      - run: echo "${{ fromJSON('{"greeting":"Hello, World!"}').greeting }}"
