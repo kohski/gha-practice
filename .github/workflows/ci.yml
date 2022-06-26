@@ -13,7 +13,7 @@ jobs:
       - name: Set Node.js 16.x
         uses: actions/setup-node@v3
         # actionsに渡す引数。actions側ではINOUT_<変数名の大文字>で参照される。例: INPUT_NODE-VERSION
-        # entrypoint, argsなどでDockerfileへ渡すこともできる
+        # entrypoint, argsなどでDockerfileへ渡すこともできる 詳しくはdocket-test.yml
         with:
           node-version: 16.x
       - name: Install dependency
@@ -34,3 +34,15 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Lint
         run: yarn lint
+  command-playground:
+    name: Command Plaayground
+    runs-on: ubuntu-latest
+    steps:
+      - run: pwd
+      - run: pwd
+        working-directory: /tmp
+      - run: ls
+        working-directory: /tmp
+      - run: pwd
+      - run: cd /tmp
+      - run: pwd
