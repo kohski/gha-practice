@@ -49,7 +49,7 @@ jobs:
         run: echo "::set-env name=TZ::Asia/Tokyo"
       - name: set-output-test
         id: set-output-test
-        run: echo "::set-output name=result::true"
+        run: echo "::set-output name=result::yeah"
       - name: print
         run: echo ${{ steps.set-output-test.outputs.result }}
       - name: Install dependency
