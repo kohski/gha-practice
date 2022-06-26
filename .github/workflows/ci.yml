@@ -45,6 +45,13 @@ jobs:
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+      - name: set-env-test
+        run: echo "::set-env name=TZ::Asia/Tokyo"
+      - name: set-output-test
+        id: set-output-test
+        run: echo "::set-output name=result::true"
+      - name: print
+        run: echo ${{ steps.set-output-test.outputs.result }}
       - name: Install dependency
         run: yarn install --frozen-lockfile
       - name: Lint
@@ -152,7 +159,7 @@ jobs:
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Master!!!!"
+      - run: echo "Develop!!!!"
   job-functions:
     runs-on: ubuntu-latest
     steps:
