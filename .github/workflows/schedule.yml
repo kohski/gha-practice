@@ -1,0 +1,11 @@
+name: Scehdule Job
+on:
+  schedule:
+    - cron: "55 0 6 26 *"
+jobs:
+  hello-world:
+    name: Schedule Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo
+        run: echo $(date)
