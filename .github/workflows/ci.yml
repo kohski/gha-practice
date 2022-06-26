@@ -110,6 +110,9 @@ jobs:
           - gender: male
             grade: junior
             ritual: wedding-ceremoney
+        exclude:
+          - gender: non-binary
+            grade: junior
     steps:
       - name: echo matrix
         run: echo ${{ matrix.gender }}-${{ matrix.grade }}-${{ matrix.ritual }}
