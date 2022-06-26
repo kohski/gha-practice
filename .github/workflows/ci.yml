@@ -106,13 +106,18 @@ jobs:
       matrix:
         gender: [female, male, non-binary]
         grade: [junior, professional]
+        # 組み合わせ次第で、さらに条件を追加
         include:
           - gender: male
             grade: junior
             ritual: wedding-ceremoney
+        # 除外パターン
         exclude:
           - gender: non-binary
             grade: junior
+      # 失敗時の挙動
+      fail-fast: true
+      max-parallel: 2
     steps:
       - name: echo matrix
         run: echo ${{ matrix.gender }}-${{ matrix.grade }}-${{ matrix.ritual }}
