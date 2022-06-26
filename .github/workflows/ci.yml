@@ -46,7 +46,11 @@ jobs:
           path: "**/node_modules"
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: set-env-test
-        run: echo "::set-env name=TZ::Asia/Tokyo"
+        # set-envはdepreciate
+        # run: echo "::set-env name=TZ::Asia/Tokyo"
+        run: echo "TZ=Asia/Tokyo" >> $GITHUB_ENV
+      - name: print-env-test
+        run: echo 'The selected color is' $TZ
       - name: set-output-test
         id: set-output-test
         run: echo "::set-output name=result::yeah"
