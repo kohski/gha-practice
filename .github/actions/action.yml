@@ -1,0 +1,5 @@
+name: "Hello-World"
+description: test action
+runs:
+  using: "node16"
+  main: "index-hello-world.js"

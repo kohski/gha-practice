@@ -31,8 +31,9 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    # outputs:
-    #   result: ${{ steps.set-output-test.outputs.result }}
+    # outputsセクションを書かないと、クロスjobでの参照ができない
+    outputs:
+      result: ${{ steps.set-output-test.outputs.result }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
