@@ -59,6 +59,10 @@ jobs:
         run: echo "::set-output name=result::true"
       - name: print-output-test
         run: echo ${{ steps.set-output-test.outputs.result }}
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          sudo: false
       - name: Install dependency
         run: yarn install --frozen-lockfile
       - name: Lint
